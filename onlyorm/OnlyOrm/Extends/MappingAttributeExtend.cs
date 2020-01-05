@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using OnlyOrm.Attributes;
+using OnlyOrm.Exceptions;
 
 namespace OnlyOrm.Exetnds
 {
@@ -15,6 +16,20 @@ namespace OnlyOrm.Exetnds
             }
 
             return type.Name;
+        }
+
+        public static string GetMasterKeyStr(this Type type, PropertyInfo[] props)
+        {
+           foreach(var prop in props)
+           {
+               if(prop.IsDefined(typeof(MasterKeyAttribute)))
+               {
+                    AbstractMappingAttribute attribute = type.GetCustomAttribute<AbstractMappingAttribute>();
+                    return attribute.GetMappingName();
+               }
+           }
+
+           throw new NoMasterExceptions();
         }
     }
 }

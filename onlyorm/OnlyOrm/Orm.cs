@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using MySql.Data.MySqlClient;
 using OnlyOrm.Exetnds;
+using System.Reflection;
 
 namespace OnlyOrm
 {
@@ -31,6 +33,11 @@ namespace OnlyOrm
         {
             Type type = typeof(T);
             string tableName = type.GetMappingName();
+            PropertyInfo[] fields = type.GetProperties();
+            string masterKeyStr = type.GetMasterKeyStr(fields);
+            string columnString = string.Join(",", fields.Select(p => p.GetMappingName()));
+            string sqlStr = $"SELECT {columnString} from {tableName} where ";
+
             return default(T);
         }
 
