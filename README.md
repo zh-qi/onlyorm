@@ -15,12 +15,42 @@
     }
 ```
 
-2. 要调用的实体类，必须继承自OnlyOrmBaseModel类
+2. 要调用的实体类，示例：
+
+   - 必须继承自OnlyOrmBaseModel类,
+
+   - TableMappingAttribute:  绑定数据库中对应的表名
+   - PrppertyMappingAttribute：绑定数据库中对应的字段名
+   - MasterKeyAttribute： 主键需要绑定该特性
 
 ```c#
-public class User:OnlyOrmBaseModel
+[TableMappingAttribute("user")]
+public class User:OrmBaseModel
 {
-	//...
+	[MasterKeyAttribute]
+	[PrppertyMappingAttribute("Id")]
+    public int Id{get;set;}
+
+	[PrppertyMappingAttribute("Name")]
+    public string Name {get;set;}
+
+	[PrppertyMappingAttribute("Email")]
+    public string Email {get;set;}
+
+	[PrppertyMappingAttribute("Mobile")]
+    public string Mobile {get;set;}
+}
+```
+
+3. 调用方式：
+
+```
+static void Main(string[] args)
+{
+	Console.WriteLine("Hello World!");
+
+	// 查找主键为1的用户
+	var user = Orm.Find<User>(1);
 }
 ```
 

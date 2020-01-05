@@ -1,4 +1,5 @@
 ﻿using System;
+using OnlyOrm.Attributes;
 
 namespace OnlyOrm.Test
 {
@@ -8,12 +9,25 @@ namespace OnlyOrm.Test
         {
             Console.WriteLine("Hello World!");
 
-            var str = Orm.Find<User>(1);
+            // 查找主键为1的用户
+            var user = Orm.Find<User>(1);
         }
     }
 
-    public class User:OnlyOrmBaseModel
+    [TableMappingAttribute("user")]
+    public class User:OrmBaseModel
     {
+        [MasterKeyAttribute]
+        [PrppertyMappingAttribute("Id")]
+        public int Id{get;set;}
 
+        [PrppertyMappingAttribute("Name")]
+        public string Name {get;set;}
+
+        [PrppertyMappingAttribute("Email")]
+        public string Email {get;set;}
+
+        [PrppertyMappingAttribute("Mobile")]
+        public string Mobile {get;set;}
     }
 }
