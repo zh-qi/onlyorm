@@ -18,18 +18,18 @@ namespace OnlyOrm.Exetnds
             return type.Name;
         }
 
-        public static string GetMasterKeyStr(this Type type, PropertyInfo[] props)
+        public static string GetPrimaryKeyStr(this Type type, PropertyInfo[] props)
         {
            foreach(var prop in props)
            {
-               if(prop.IsDefined(typeof(MasterKeyAttribute)))
+               if(prop.IsDefined(typeof(PrimaryKeyAttribute)))
                {
-                    AbstractMappingAttribute attribute = type.GetCustomAttribute<AbstractMappingAttribute>();
+                    AbstractMappingAttribute attribute = prop.GetCustomAttribute<AbstractMappingAttribute>();
                     return attribute.GetMappingName();
                }
            }
 
-           throw new NoMasterExceptions();
+           throw new NoPrimaryException();
         }
     }
 }

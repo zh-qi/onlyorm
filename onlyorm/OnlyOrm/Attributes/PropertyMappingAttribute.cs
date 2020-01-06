@@ -4,9 +4,9 @@ using OnlyOrm.Attributes;
 namespace OnlyOrm.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class PrppertyMappingAttribute:AbstractMappingAttribute
+    public class PropertyMappingAttribute :AbstractMappingAttribute
     {
-        public PrppertyMappingAttribute(string name):base(name)
+        public PropertyMappingAttribute(string name):base(name)
         {
 
         }

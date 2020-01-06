@@ -5,6 +5,7 @@ using System.IO;
 using MySql.Data.MySqlClient;
 using OnlyOrm.Exetnds;
 using System.Reflection;
+using OnlyOrm.Cache;
 
 namespace OnlyOrm
 {
@@ -29,23 +30,40 @@ namespace OnlyOrm
         ///<summary>
         /// 按照主键进行查找对应的数据库数据
         ///</summary>
-        public static T Find<T>(int key) where T:OrmBaseModel
+        public static T Find<T>(string key) where T:OrmBaseModel
         {
             Type type = typeof(T);
-            string tableName = type.GetMappingName();
-            PropertyInfo[] fields = type.GetProperties();
-            string masterKeyStr = type.GetMasterKeyStr(fields);
-            string columnString = string.Join(",", fields.Select(p => p.GetMappingName()));
-            string sqlStr = $"SELECT {columnString} from {tableName} where ";
+            PropertyInfo[] properies = type.GetProperties();
+            string primaryKeyStr = type.GetPrimaryKeyStr(properies);
+            string sqlStr = SqlCache<T>.GetSql(SqlType.Find);
+            MySqlParameter[] parameters = new []
+            {
+                new MySqlParameter(primaryKeyStr, key.ToString()),
+            };
 
-            return default(T);
+            return ExceteSql<T>(sqlStr, parameters, command =>
+            {
+                MySqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    T result = Activator.CreateInstance<T>();
+                    foreach (var proerty in properies)
+                    {
+                        var value = reader[proerty.GetMappingName()];
+                        proerty.SetValue(result, value is DBNull ? null : value);
+                    }
+                    return result;
+                }
+
+                return default(T);
+            });
         }
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)
         { 
             using(MySqlConnection conn = new MySqlConnection(_connctStr))
             {
-                MySqlCommand command = new MySqlCommand(_connctStr, conn);
+                MySqlCommand command = new MySqlCommand(sqlStr, conn);
                 command.Parameters.AddRange(parameters);
                 conn.Open();
                 return callback.Invoke(command);

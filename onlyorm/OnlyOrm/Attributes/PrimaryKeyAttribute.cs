@@ -4,9 +4,9 @@ using OnlyOrm.Attributes;
 namespace OnlyOrm.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class MasterKeyAttribute:Attribute
+    public class PrimaryKeyAttribute:Attribute
     {
-        public MasterKeyAttribute()
+        public PrimaryKeyAttribute()
         {
 
         }

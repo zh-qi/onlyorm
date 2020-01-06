@@ -27,17 +27,17 @@
 [TableMappingAttribute("user")]
 public class User:OrmBaseModel
 {
-	[MasterKeyAttribute]
-	[PrppertyMappingAttribute("Id")]
+    [PrimaryKeyAttribute]
+    [PrppertyMappingAttribute("Id")]
     public int Id{get;set;}
 
-	[PrppertyMappingAttribute("Name")]
+    [PrppertyMappingAttribute("Name")]
     public string Name {get;set;}
 
-	[PrppertyMappingAttribute("Email")]
+    [PrppertyMappingAttribute("Email")]
     public string Email {get;set;}
 
-	[PrppertyMappingAttribute("Mobile")]
+    [PrppertyMappingAttribute("Mobile")]
     public string Mobile {get;set;}
 }
 ```
@@ -48,7 +48,6 @@ public class User:OrmBaseModel
 static void Main(string[] args)
 {
 	Console.WriteLine("Hello World!");
-
 	// 查找主键为1的用户
 	var user = Orm.Find<User>(1);
 }

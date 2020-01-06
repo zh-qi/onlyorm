@@ -10,24 +10,24 @@ namespace OnlyOrm.Test
             Console.WriteLine("Hello World!");
 
             // 查找主键为1的用户
-            var user = Orm.Find<User>(1);
+            var user = Orm.Find<User>("1");
         }
     }
 
     [TableMappingAttribute("user")]
     public class User:OrmBaseModel
     {
-        [MasterKeyAttribute]
-        [PrppertyMappingAttribute("Id")]
+        [PrimaryKeyAttribute]
+        [PropertyMappingAttribute("Id")]
         public int Id{get;set;}
 
-        [PrppertyMappingAttribute("Name")]
+        [PropertyMappingAttribute("Name")]
         public string Name {get;set;}
 
-        [PrppertyMappingAttribute("Email")]
+        [PropertyMappingAttribute("Email")]
         public string Email {get;set;}
 
-        [PrppertyMappingAttribute("Mobile")]
+        [PropertyMappingAttribute("Mobile")]
         public string Mobile {get;set;}
     }
 }
