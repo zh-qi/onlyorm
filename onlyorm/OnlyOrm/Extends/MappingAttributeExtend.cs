@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using OnlyOrm.Attributes;
 using OnlyOrm.Exceptions;
@@ -7,9 +8,9 @@ namespace OnlyOrm.Exetnds
 {
     public static class MappingAttributeExtend
     {
-        public static string GetMappingName<T>(this T type) where T: MemberInfo
+        public static string GetMappingName<T>(this T type) where T : MemberInfo
         {
-            if(type.IsDefined(typeof(AbstractMappingAttribute), true))
+            if (type.IsDefined(typeof(AbstractMappingAttribute), true))
             {
                 AbstractMappingAttribute attribute = type.GetCustomAttribute<AbstractMappingAttribute>();
                 return attribute.GetMappingName();
@@ -18,18 +19,35 @@ namespace OnlyOrm.Exetnds
             return type.Name;
         }
 
-        public static string GetPrimaryKeyStr(this Type type, PropertyInfo[] props)
+        public static PropertyInfo GetPrimaryKeyStr(this Type type, PropertyInfo[] props, out bool autoIncr)
         {
-           foreach(var prop in props)
-           {
-               if(prop.IsDefined(typeof(PrimaryKeyAttribute)))
-               {
-                    AbstractMappingAttribute attribute = prop.GetCustomAttribute<AbstractMappingAttribute>();
-                    return attribute.GetMappingName();
-               }
-           }
+            autoIncr = false;
+            foreach (var prop in props)
+            {
+                if (prop.IsDefined(typeof(PrimaryKeyAttribute)))
+                {
+                    PrimaryKeyAttribute primaryAttribute = prop.GetCustomAttribute<PrimaryKeyAttribute>();
+                    autoIncr = primaryAttribute.AutoIncr;
 
-           throw new NoPrimaryException();
+                    AbstractMappingAttribute attribute = prop.GetCustomAttribute<AbstractMappingAttribute>();
+                    return prop;
+                }
+            }
+
+            throw new NoPrimaryException();
+        }
+
+        public static PropertyInfo[] FilterPrimaryKey(this PropertyInfo[] properties)
+        {
+            var result = new List<PropertyInfo>();
+            foreach (var prop in properties)
+            {
+                if (!prop.IsDefined(typeof(PrimaryKeyAttribute)))
+                {
+                    result.Add(prop);
+                }
+            }
+            return result.ToArray();
         }
     }
 }

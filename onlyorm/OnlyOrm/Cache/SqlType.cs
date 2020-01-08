@@ -10,5 +10,4 @@ namespace OnlyOrm.Cache
 
         public static string Deleate="deleate";
     }
-
 }
