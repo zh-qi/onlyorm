@@ -4,13 +4,13 @@
 
 # 使用步骤
 
-1. 在配置文件中添加如下配置：
+1. 在配置文件中添加如下配置
 
 ```json
 "OnlyOrm":{
     	// 链接字符串
         "ConnectString":"",
-    	// 数据库类型，mysql或者sqlserver，大小写不敏感
+    	// 数据库类型，mysql或者sqlserver，大小写不敏感，暂时只支持Mysql
         "SqlType":"Mysql"
     }
 ```
@@ -21,24 +21,24 @@
 
    - TableMappingAttribute:  绑定数据库中对应的表名
    - PrppertyMappingAttribute：绑定数据库中对应的字段名
-   - MasterKeyAttribute： 主键需要绑定该特性
+   - PrimaryKeyAttribute： 主键需要绑定该特性,true/false代表是否自增
 
 ```c#
 [TableMappingAttribute("user")]
-public class User:OrmBaseModel
+public class User : OrmBaseModel
 {
-    [PrimaryKeyAttribute]
-    [PrppertyMappingAttribute("Id")]
-    public int Id{get;set;}
+    [PrimaryKeyAttribute(true)]
+    [PropertyMappingAttribute("Id")]
+    public int Id { get; set; }
 
-    [PrppertyMappingAttribute("Name")]
-    public string Name {get;set;}
+    [PropertyMappingAttribute("Name")]
+    public string Name { get; set; }
 
-    [PrppertyMappingAttribute("Email")]
-    public string Email {get;set;}
+    [PropertyMappingAttribute("Email")]
+    public string Email { get; set; }
 
-    [PrppertyMappingAttribute("Mobile")]
-    public string Mobile {get;set;}
+    [PropertyMappingAttribute("Mobile")]
+    public string Mobile { get; set; }
 }
 ```
 

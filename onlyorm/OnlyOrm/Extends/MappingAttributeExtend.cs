@@ -6,9 +6,9 @@ using OnlyOrm.Exceptions;
 
 namespace OnlyOrm.Exetnds
 {
-    public static class MappingAttributeExtend
+    internal static class MappingAttributeExtend
     {
-        public static string GetMappingName<T>(this T type) where T : MemberInfo
+        internal static string GetMappingName<T>(this T type) where T : MemberInfo
         {
             if (type.IsDefined(typeof(AbstractMappingAttribute), true))
             {
@@ -19,7 +19,7 @@ namespace OnlyOrm.Exetnds
             return type.Name;
         }
 
-        public static PropertyInfo GetPrimaryKeyStr(this Type type, PropertyInfo[] props, out bool autoIncr)
+        internal static PropertyInfo GetPrimaryKeyStr(this Type type, PropertyInfo[] props, out bool autoIncr)
         {
             autoIncr = false;
             foreach (var prop in props)
@@ -37,7 +37,7 @@ namespace OnlyOrm.Exetnds
             throw new NoPrimaryException();
         }
 
-        public static PropertyInfo[] FilterPrimaryKey(this PropertyInfo[] properties)
+        internal static PropertyInfo[] FilterPrimaryKey(this PropertyInfo[] properties)
         {
             var result = new List<PropertyInfo>();
             foreach (var prop in properties)

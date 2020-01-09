@@ -11,7 +11,7 @@ namespace OnlyOrm.Cache
     /// 对Sql语句进行缓存，不必每次都动态生成，提高了效率
     /// 采用泛型+字典双结构缓存
     /// </summary>
-    public static class SqlCache<T> where T : OrmBaseModel
+    internal static class SqlCache<T> where T : OrmBaseModel
     {
         private static string TableName { get; set; }
         private static PropertyInfo PrimaryKeyProp { get; set; }
@@ -30,16 +30,16 @@ namespace OnlyOrm.Cache
                 Properties = Properties.FilterPrimaryKey();
             }
 
-            InitFindStr();
-            InitInsertStr();
-            InitUpdateStr();
-            InitDelStr();
+            _cache[SqlType.Find] = SqlStringHelper.GetFindStr(TableName, PrimaryKeyProp, Properties);
+            _cache[SqlType.Insert] = SqlStringHelper.GetInsertStr(TableName, Properties);
+            _cache[SqlType.Deleate] = SqlStringHelper.GetDelStr(TableName, PrimaryKeyProp);
+            _cache[SqlType.Update] = SqlStringHelper.GetUpdateStr(TableName, Properties);
         }
 
         /// <summary>
         /// 获取缓存的SQL
         /// </summary>
-        public static string GetSql(string sqlType)
+        internal static string GetSql(string sqlType)
         {
             return _cache[sqlType];
         }
@@ -49,7 +49,7 @@ namespace OnlyOrm.Cache
         /// </summary>
         /// <param name="sqlType">Sql类型</param>
         /// <param name="primaryValue">主键的值</param>
-        public static MySqlParameter[] GetFindMySqlParameter(string primaryValue)
+        internal static MySqlParameter[] GetFindMySqlParameter(string primaryValue)
         {
             MySqlParameter[] parameters = new[]
             {
@@ -64,7 +64,7 @@ namespace OnlyOrm.Cache
         /// </summary>
         /// <param name="sqlType">Sql类型</param>
         /// <param name="primaryValue">实体类的实例</param>
-        public static MySqlParameter[] GetInsertMySqlParameters(T t)
+        internal static MySqlParameter[] GetInsertMySqlParameters(T t)
         {
             var parameters = Properties.Select(
                     p => new MySqlParameter($"?{p.GetMappingName()}", p.GetValue(t) ?? DBNull.Value)
@@ -82,7 +82,7 @@ namespace OnlyOrm.Cache
         /// </summary>
         /// <param name="sqlType">Sql类型</param>
         /// <param name="primaryValue">实体类的实例</param>
-        public static MySqlParameter[] GetUpdateMySqlParameters(T t)
+        internal static MySqlParameter[] GetUpdateMySqlParameters(T t)
         {
             var parameters = Properties.Select(
                     p => new MySqlParameter($"?{p.GetMappingName()}", p.GetValue(t) ?? DBNull.Value)
@@ -97,7 +97,7 @@ namespace OnlyOrm.Cache
         /// </summary>
         /// <param name="sqlType">Sql类型</param>
         /// <param name="primaryValue">主键的值</param>
-        public static MySqlParameter[] GetDelMySqlParameters(string primaryValue)
+        internal static MySqlParameter[] GetDelMySqlParameters(string primaryValue)
         {
             MySqlParameter[] parameters = new[]
             {
@@ -105,36 +105,6 @@ namespace OnlyOrm.Cache
             };
 
             return parameters;
-        }
-
-        private static void InitFindStr()
-        {
-            var columnString = string.Join(",", Properties.Select(p => p.GetMappingName()));
-            var sqlStr = $"SELECT {columnString} from {TableName} where {PrimaryKeyProp.GetMappingName()}=?{PrimaryKeyProp.GetMappingName()}";
-            _cache[SqlType.Find] = sqlStr;
-        }
-
-        private static void InitInsertStr()
-        {
-            var values = string.Join(",", Properties.Select(p => p.GetMappingName()));
-            var parameterStr = string.Join(",", Properties.Select(p => "?" + p.GetMappingName()));
-            var sqlStr = $"INSERT INTO {TableName} ({values}) values ({parameterStr})";
-
-            _cache[SqlType.Insert] = sqlStr;
-        }
-
-        private static void InitUpdateStr()
-        {
-            var updateStr = String.Join(",", Properties.Select(p => $"{p.GetMappingName()}=?{p.GetMappingName()}"));
-            var sqlStr = $"UPDATE {TableName} set {updateStr} Where Id = ?Id";
-
-            _cache[SqlType.Update] = sqlStr;
-        }
-
-        private static void InitDelStr()
-        {
-            var sqlStr = $"DELETE FROM {TableName} Where Id=?Id";
-            _cache[SqlType.Deleate] = sqlStr;
         }
     }
 }

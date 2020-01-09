@@ -21,7 +21,7 @@ namespace OnlyOrm.Test
             };
 
             // Orm.Insert<User>(user1);
-            //Orm.Update<User>(user1);
+            // Orm.Update<User>(user1);
 
             Orm.Deleate<User>("3");
         }
