@@ -14,9 +14,21 @@ namespace OnlyOrm.Cache
     internal static class SqlCache<T> where T : OrmBaseModel
     {
         private static string TableName { get; set; }
-        private static PropertyInfo PrimaryKeyProp { get; set; }
-        private static PropertyInfo[] Properties { get; set; }
-        private static Dictionary<string, string> _cache = new Dictionary<string, string>();
+        internal static PropertyInfo PrimaryKeyProp { get; set; }
+        internal static PropertyInfo[] Properties { get; set; }
+        private static Dictionary<SqlType, string> _cache = new Dictionary<SqlType, string>();
+        internal static PropertyInfo[] AllProperties
+        {
+            get
+            {
+                if (null == PrimaryKeyProp)
+                    return Properties;
+
+                var list = Properties.ToList();
+                list.Add(PrimaryKeyProp);
+                return list.ToArray();
+            }
+        }
 
         static SqlCache()
         {
@@ -30,16 +42,17 @@ namespace OnlyOrm.Cache
                 Properties = Properties.FilterPrimaryKey();
             }
 
-            _cache[SqlType.Find] = SqlStringHelper.GetFindStr(TableName, PrimaryKeyProp, Properties);
-            _cache[SqlType.Insert] = SqlStringHelper.GetInsertStr(TableName, Properties);
-            _cache[SqlType.Deleate] = SqlStringHelper.GetDelStr(TableName, PrimaryKeyProp);
-            _cache[SqlType.Update] = SqlStringHelper.GetUpdateStr(TableName, Properties);
+            _cache[SqlType.Find] = SqlStringHelper.GetFindSql(TableName, PrimaryKeyProp, AllProperties);
+            _cache[SqlType.Insert] = SqlStringHelper.GetInsertSql(TableName, Properties);
+            _cache[SqlType.Deleate] = SqlStringHelper.GetDelSql(TableName, PrimaryKeyProp);
+            _cache[SqlType.Update] = SqlStringHelper.GetUpdateSql(TableName, Properties);
+            _cache[SqlType.FindWhere] = SqlStringHelper.GetFindWhereSql(TableName, AllProperties);
         }
 
         /// <summary>
         /// 获取缓存的SQL
         /// </summary>
-        internal static string GetSql(string sqlType)
+        internal static string GetSql(SqlType sqlType)
         {
             return _cache[sqlType];
         }

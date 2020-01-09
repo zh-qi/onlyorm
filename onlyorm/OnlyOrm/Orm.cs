@@ -45,7 +45,7 @@ namespace OnlyOrm
                 if (reader.Read())
                 {
                     Type type = typeof(T);
-                    PropertyInfo[] properies = type.GetProperties();
+                    PropertyInfo[] properies = SqlCache<T>.AllProperties;
                     T result = Activator.CreateInstance<T>();
                     foreach (var proerty in properies)
                     {
@@ -116,9 +116,30 @@ namespace OnlyOrm
         /// <summary>
         /// 批量获取符合条件的数据
         /// </summary>
-        public static IEnumerable<T> FindWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
+        public static IList<T> FindWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
         {
-            return null;
+            SqlVisitor visitor = new SqlVisitor();
+            visitor.Visit(conditions);
+            var sqlStr = SqlCache<T>.GetSql(SqlType.FindWhere) + visitor.GetSql();
+            return ExceteSql<IList<T>>(sqlStr, null, command =>
+            {
+                var result = new List<T>();
+                Type type = typeof(T);
+                PropertyInfo[] properies = SqlCache<T>.AllProperties;
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    T t = Activator.CreateInstance<T>();
+                    foreach (var proerty in properies)
+                    {
+                        var value = reader[proerty.GetMappingName()];
+                        proerty.SetValue(t, value is DBNull ? null : value);
+                    }
+                    result.Add(t);
+                }
+
+                return result;
+            });
         }
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)
@@ -126,7 +147,10 @@ namespace OnlyOrm
             using (MySqlConnection conn = new MySqlConnection(_connctStr))
             {
                 MySqlCommand command = new MySqlCommand(sqlStr, conn);
-                command.Parameters.AddRange(parameters);
+                if (null != parameters)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
                 conn.Open();
                 return callback.Invoke(command);
             }

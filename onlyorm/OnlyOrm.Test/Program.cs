@@ -11,16 +11,16 @@ namespace OnlyOrm.Test
 
             // 查找主键为1的用户
             // var user = Orm.Find<User>("1");
+            var user = Orm.FindWhere<User>(u => u.Id == 1);
+            // var user1 = new User
+            // {
+            //     Id = 3,
+            //     Name = "test",
+            //     Mobile = "456",
+            //     Email = "344@qq.com"
+            // };
 
-            var user1 = new User
-            {
-                Id = 3,
-                Name = "test",
-                Mobile = "456",
-                Email = "344@qq.com"
-            };
-
-            Orm.Insert<User>(user1);
+            // Orm.Insert<User>(user1);
             // Orm.Update<User>(user1);
 
             // Orm.Deleate<User>("3");

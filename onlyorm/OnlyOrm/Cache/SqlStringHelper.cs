@@ -10,14 +10,21 @@ namespace OnlyOrm.Cache
     /// </summary>
     internal static class SqlStringHelper
     {
-        internal static string GetFindStr(string tableName, PropertyInfo primaryKeyProp, PropertyInfo[] properties)
+        internal static string GetFindSql(string tableName, PropertyInfo primaryKeyProp, PropertyInfo[] properties)
         {
             var columnString = string.Join(",", properties.Select(p => p.GetMappingName()));
             var sqlStr = $"SELECT {columnString} from {tableName} where {primaryKeyProp.GetMappingName()}=?{primaryKeyProp.GetMappingName()}";
             return sqlStr;
         }
 
-        internal static string GetInsertStr(string tableName, PropertyInfo[] properties)
+        internal static string GetFindWhereSql(string tableName, PropertyInfo[] properties)
+        {
+            var columnString = string.Join(",", properties.Select(p => p.GetMappingName()));
+            var sqlStr = $"SELECT {columnString} from {tableName} where ";
+            return sqlStr;
+        }
+
+        internal static string GetInsertSql(string tableName, PropertyInfo[] properties)
         {
             var values = string.Join(",", properties.Select(p => p.GetMappingName()));
             var parameterStr = string.Join(",", properties.Select(p => "?" + p.GetMappingName()));
@@ -26,7 +33,7 @@ namespace OnlyOrm.Cache
             return sqlStr;
         }
 
-        internal static string GetUpdateStr(string tableName, PropertyInfo[] properties)
+        internal static string GetUpdateSql(string tableName, PropertyInfo[] properties)
         {
             var updateStr = String.Join(",", properties.Select(p => $"{p.GetMappingName()}=?{p.GetMappingName()}"));
             var sqlStr = $"UPDATE {tableName} set {updateStr} Where Id = ?Id";
@@ -34,7 +41,7 @@ namespace OnlyOrm.Cache
             return sqlStr;
         }
 
-        internal static string GetDelStr(string tableName, PropertyInfo primaryKeyProp)
+        internal static string GetDelSql(string tableName, PropertyInfo primaryKeyProp)
         {
             var sqlStr = $"DELETE FROM {tableName} Where {primaryKeyProp.GetMappingName()}=?{primaryKeyProp.GetMappingName()}";
             return sqlStr;
