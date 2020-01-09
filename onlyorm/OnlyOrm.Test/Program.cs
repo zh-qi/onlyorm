@@ -20,10 +20,10 @@ namespace OnlyOrm.Test
                 Email = "344@qq.com"
             };
 
-            // Orm.Insert<User>(user1);
+            Orm.Insert<User>(user1);
             // Orm.Update<User>(user1);
 
-            Orm.Deleate<User>("3");
+            // Orm.Deleate<User>("3");
         }
     }
 }
