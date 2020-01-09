@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using MySql.Data.MySqlClient;
 using OnlyOrm.Exetnds;
 using System.Reflection;
 using OnlyOrm.Cache;
+using System.Collections.Generic;
 
 namespace OnlyOrm
 {
@@ -76,6 +77,9 @@ namespace OnlyOrm
             });
         }
 
+        /// <summary>
+        /// 根据实例主键进行更新
+        /// </summary>
         public static bool Update<T>(T t) where T : OrmBaseModel
         {
             if (null == t)
@@ -91,7 +95,9 @@ namespace OnlyOrm
             });
         }
 
-
+        /// <summary>
+        /// 按主键值进行删除
+        /// </summary>
         public static bool Deleate<T>(string key) where T : OrmBaseModel
         {
             if (string.IsNullOrEmpty(key))
@@ -105,6 +111,14 @@ namespace OnlyOrm
                 var result = command.ExecuteNonQuery();
                 return result == 1;
             });
+        }
+
+        /// <summary>
+        /// 批量获取符合条件的数据
+        /// </summary>
+        public static IEnumerable<T> FindWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
+        {
+            return null;
         }
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)

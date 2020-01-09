@@ -2,20 +2,20 @@ using OnlyOrm.Attributes;
 
 namespace OnlyOrm.Test
 {
-    [TableMappingAttribute("user")]
+    [TableMapping("user")]
     public class User : OrmBaseModel
     {
-        [PrimaryKeyAttribute(true)]
-        [PropertyMappingAttribute("Id")]
+        [PrimaryKey(true)]
+        [PropertyMapping("Id")]
         public int Id { get; set; }
 
-        [PropertyMappingAttribute("Name")]
+        [PropertyMapping("Name")]
         public string Name { get; set; }
 
-        [PropertyMappingAttribute("Email")]
+        [PropertyMapping("Email")]
         public string Email { get; set; }
 
-        [PropertyMappingAttribute("Mobile")]
+        [PropertyMapping("Mobile")]
         public string Mobile { get; set; }
     }
 }

@@ -8,9 +8,8 @@
 
 ```json
 "OnlyOrm":{
-    	// 链接字符串
-        "ConnectString":"",
-    	// 数据库类型，mysql或者sqlserver，大小写不敏感，暂时只支持Mysql
+        "ConnectString":"server=127.0.0.1;userid=root;password=1234567;database=study;",
+    	/* 数据库类型，mysql或者sqlserver，大小写不敏感，暂时只支持Mysql*/
         "SqlType":"Mysql"
     }
 ```
@@ -24,31 +23,29 @@
    - PrimaryKeyAttribute： 主键需要绑定该特性,true/false代表是否自增
 
 ```c#
-[TableMappingAttribute("user")]
+[TableMapping("user")]
 public class User : OrmBaseModel
 {
-    [PrimaryKeyAttribute(true)]
-    [PropertyMappingAttribute("Id")]
+    [PrimaryKey(true)]
+    [PropertyMapping("Id")]
     public int Id { get; set; }
 
-    [PropertyMappingAttribute("Name")]
+    [PropertyMapping("Name")]
     public string Name { get; set; }
 
-    [PropertyMappingAttribute("Email")]
+    [PropertyMapping("Email")]
     public string Email { get; set; }
 
-    [PropertyMappingAttribute("Mobile")]
+    [PropertyMapping("Mobile")]
     public string Mobile { get; set; }
 }
 ```
 
 3. 调用方式：
 
-```
+```C#
 static void Main(string[] args)
 {
-	Console.WriteLine("Hello World!");
-	// 查找主键为1的用户
 	var user = Orm.Find<User>(1);
 }
 ```
