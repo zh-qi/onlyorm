@@ -11,7 +11,9 @@ namespace OnlyOrm.Test
 
             // 查找主键为1的用户
             // var user = Orm.Find<User>("1");
-            var user = Orm.FindWhere<User>(u => u.Id == 1);
+            // var user = Orm.FindWhere<SuperUser>(u => (u.NickName == "1;select * from user;--" || u.NickName.Contains("zhang")));
+            var user = Orm.FindWhere<SuperUser>(u => (u.NickName.Contains("zhang") || u.Id == 4));
+
             // var user1 = new User
             // {
             //     Id = 3,

@@ -60,6 +60,37 @@ namespace OnlyOrm
         }
 
         /// <summary>
+        /// 批量获取符合条件的数据
+        /// </summary>
+        public static IList<T> FindWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
+        {
+            SqlVisitor visitor = new SqlVisitor();
+            visitor.Visit(conditions);
+            var sqlStr = SqlCache<T>.GetSql(SqlType.FindWhere) + visitor.GetSql();
+            var parameters = visitor.GetParameters();
+            return ExceteSql<IList<T>>(sqlStr, parameters, command =>
+            {
+                var result = new List<T>();
+                var type = typeof(T);
+                var properies = SqlCache<T>.AllProperties;
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    T t = Activator.CreateInstance<T>();
+                    foreach (var proerty in properies)
+                    {
+                        var value = reader[proerty.GetMappingName()];
+                        proerty.SetValue(t, value is DBNull ? null : value);
+                    }
+                    result.Add(t);
+                }
+
+                return result;
+            });
+        }
+
+
+        /// <summary>
         /// 插入实体，如果实体的主键是自动增长的，会被过滤掉
         /// </summary>
         public static bool Insert<T>(T t) where T : OrmBaseModel
@@ -113,34 +144,6 @@ namespace OnlyOrm
             });
         }
 
-        /// <summary>
-        /// 批量获取符合条件的数据
-        /// </summary>
-        public static IList<T> FindWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
-        {
-            SqlVisitor visitor = new SqlVisitor();
-            visitor.Visit(conditions);
-            var sqlStr = SqlCache<T>.GetSql(SqlType.FindWhere) + visitor.GetSql();
-            return ExceteSql<IList<T>>(sqlStr, null, command =>
-            {
-                var result = new List<T>();
-                Type type = typeof(T);
-                PropertyInfo[] properies = SqlCache<T>.AllProperties;
-                MySqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    T t = Activator.CreateInstance<T>();
-                    foreach (var proerty in properies)
-                    {
-                        var value = reader[proerty.GetMappingName()];
-                        proerty.SetValue(t, value is DBNull ? null : value);
-                    }
-                    result.Add(t);
-                }
-
-                return result;
-            });
-        }
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)
         {
