@@ -46,7 +46,44 @@ public class User : OrmBaseModel
 ```C#
 static void Main(string[] args)
 {
-	var user = Orm.Find<User>(1);
+	{
+        // 查找主键为1的用户
+        var user1 = Orm.Find<SuperUser>("1");
+    }
+    {
+        // 组合条件查询，
+        // 暂时不支持多个或语句,比如：Orm.FindWhere<SuperUser>(u=>u.Id == 2 || u.Id == 3);因为暂时没法把表达式目录树转为in语句
+        // 暂时不支持联表查询
+        var user = Orm.FindWhere<SuperUser>(u => (u.NickName.Contains("zhang") || 2 == u.Id));
+        Console.WriteLine(user.Count);
+    }
+    {
+        // 插入一个User实例，如果Id是主键，会被过滤掉
+        var user1 = new SuperUser
+        {
+            Id = 3,
+            NickName = "test",
+            Mobile = "456",
+            Email = "344@qq.com"
+        };
+
+        Orm.Insert<SuperUser>(user1);
+    }
+    {
+        // 更新主键是3dUser
+        var user1 = new SuperUser
+        {
+            Id = 3,
+            NickName = "test1",
+            Mobile = "456",
+            Email = "344@qq.com"
+        };
+        Orm.Update<SuperUser>(user1);
+    }
+    {
+        // 删除主键是3的User
+        // Orm.Deleate<User>("3");
+    }
 }
 ```
 

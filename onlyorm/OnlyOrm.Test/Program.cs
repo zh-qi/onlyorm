@@ -8,8 +8,6 @@ namespace OnlyOrm.Test
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
             {
                 // 查找主键为1的用户
                 var user1 = Orm.Find<SuperUser>("1");
