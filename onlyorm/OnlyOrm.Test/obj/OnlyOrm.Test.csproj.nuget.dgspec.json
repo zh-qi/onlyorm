@@ -1,35 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj": {}
+    "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm.Test/OnlyOrm.Test.csproj": {}
   },
   "projects": {
-    "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj": {
+    "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm.Test/OnlyOrm.Test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj",
+        "projectUniqueName": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm.Test/OnlyOrm.Test.csproj",
         "projectName": "OnlyOrm.Test",
-        "projectPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj",
-        "packagesPath": "C:\\Users\\zhangqi\\.nuget\\packages\\",
-        "outputPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\obj\\",
+        "projectPath": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm.Test/OnlyOrm.Test.csproj",
+        "packagesPath": "/home/zhangqi/.nuget/packages/",
+        "outputPath": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm.Test/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\zhangqi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/zhangqi/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {
-                "projectPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj"
+              "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/OnlyOrm.csproj": {
+                "projectPath": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/OnlyOrm.csproj"
               }
             }
           }
@@ -57,30 +54,27 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.100/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {
+    "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/OnlyOrm.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj",
+        "projectUniqueName": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/OnlyOrm.csproj",
         "projectName": "OnlyOrm",
-        "projectPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj",
-        "packagesPath": "C:\\Users\\zhangqi\\.nuget\\packages\\",
-        "outputPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\obj\\",
+        "projectPath": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/OnlyOrm.csproj",
+        "packagesPath": "/home/zhangqi/.nuget/packages/",
+        "outputPath": "/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\zhangqi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/zhangqi/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
@@ -121,7 +115,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.100/RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -32,40 +32,30 @@ namespace OnlyOrm.Exetnds
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            var right = node.Right;
-            this.Visit(right);
-
-            var left = node.Left;
-            this.Visit(left);
-
-            if (node.Left.NodeType == ExpressionType.MemberAccess)
+            if(node.Left.NodeType == ExpressionType.MemberAccess && node.Right.NodeType == ExpressionType.Constant)
             {
-                if (node.Right.NodeType == ExpressionType.Constant)
-                {
-                    var leftNode = ((MemberExpression)node.Left);
-                    var rightNode = ((ConstantExpression)node.Right);
-                    this._conditions.Push("?" + leftNode.Member.GetMappingName());
-                    this._conditions.Push(GetSqlOperate(node.NodeType));
-                    this._conditions.Push(leftNode.Member.GetMappingName());
-
-                    var memberName = leftNode.Member.GetMappingName();
-                    var value = rightNode.Value.ToString();
-                    this._parameters.Add(new MySqlParameter($"?{memberName}", value));
-                }
+                this.ProcessNode(node.NodeType, (ConstantExpression)node.Right, (MemberExpression)node.Left);
+                return node;
             }
+            if(node.Left.NodeType == ExpressionType.Constant && node.Right.NodeType == ExpressionType.MemberAccess)
+            {
+                this.ProcessNode(node.NodeType, (ConstantExpression)node.Left, (MemberExpression)node.Right);
+                return node;
+            }
+            this.Visit(node.Left);
+            this._conditions.Push(GetSqlOperate(node.NodeType));
+            this.Visit(node.Right);
 
             return node;
         }
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            // this._conditions.Push(node.Member.GetMappingName());
             return node;
         }
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            // this._conditions.Push(node.Value.ToString());
             return node;
         }
 
@@ -74,29 +64,34 @@ namespace OnlyOrm.Exetnds
             if (null == method)
                 throw new ArgumentNullException("method is null");
 
-            string format;
+            string paraValue = (method.Arguments[0] as ConstantExpression).Value.ToString();
             switch (method.Method.Name)
             {
                 case "StartWith":
-                    format = "( {0} LIKE '{1}%')";
+                    paraValue = $"{paraValue}%";
                     break;
                 case "Contains":
-                    format = "( {0} LIKE '%{1}%')";
+                    paraValue = $"%{paraValue}%";
                     break;
                 case "EndWith":
-                    format = "({0} LIKE '%{1}')";
+                    paraValue = $"%{paraValue}";
                     break;
                 default:
                     throw new MethodNotSupportException(method.Method.Name);
             }
             var memberNode = method.Object as MemberExpression;
-            this.Visit(method.Object);
-            this.Visit(method.Arguments[0]);
-            var right = this._conditions.Pop();
-            var left = this._conditions.Pop();
-            this._conditions.Push(string.Format(format, left, $"?{left}"));
-            this._parameters.Add(new MySqlParameter($"?{left}", right));
+            this._conditions.Push(string.Format("({0} LIKE ?{0})", memberNode.Member.GetMappingName()));
+            this._parameters.Add(new MySqlParameter($"?{memberNode.Member.GetMappingName()}", paraValue));
             return method;
+        }
+
+        private void ProcessNode(ExpressionType nodeType, ConstantExpression cNode, MemberExpression mNode)
+        {
+            var memberName = mNode.Member.GetMappingName();
+            this._conditions.Push($"{memberName} {GetSqlOperate(nodeType)} ?{memberName}");
+
+            var value = cNode.Value.ToString();
+            this._parameters.Add(new MySqlParameter($"?{memberName}", value));
         }
 
         private static string GetSqlOperate(ExpressionType type)
@@ -124,23 +119,6 @@ namespace OnlyOrm.Exetnds
                 default:
                     throw new OperateNotSupportException(type.ToString());
             }
-        }
-
-        public static object GetValue(MemberExpression node)
-        {
-            object value = new object();
-            var @object =
-              ((ConstantExpression)(node.Expression)).Value; //这个是重点
-
-            if (node.Member.MemberType == MemberTypes.Field)
-            {
-                value = ((FieldInfo)node.Member).GetValue(@object);
-            }
-            else if (node.Member.MemberType == MemberTypes.Property)
-            {
-                value = ((PropertyInfo)node.Member).GetValue(@object);
-            }
-            return value;
         }
     }
 }

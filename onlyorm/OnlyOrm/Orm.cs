@@ -11,7 +11,9 @@ using System.Collections.Generic;
 namespace OnlyOrm
 {
     ///<summary>
-    /// 实体类的拓展泛型方法，可以通过泛型进行操作ORM
+    /// 实体类的拓展泛型方法，可以通过泛型进行操作ORM，，
+    /// 暂时不支持联表查询
+    /// 暂时不支持多个或语句,比如：Orm.FindWhere<SuperUser>(u=>u.Id == 2 || u.Id == 3);因为暂时没法把表达式目录树转为in语句
     ///</summary>
     public static class Orm
     {
@@ -144,6 +146,10 @@ namespace OnlyOrm
             });
         }
 
+        public static bool InList<T>() where T : OrmBaseModel
+        {
+            return true;
+        }
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)
         {
