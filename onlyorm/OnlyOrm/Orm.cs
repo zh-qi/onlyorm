@@ -7,6 +7,7 @@ using OnlyOrm.Exetnds;
 using System.Reflection;
 using OnlyOrm.Cache;
 using System.Collections.Generic;
+using System.Data;
 
 namespace OnlyOrm
 {
@@ -75,13 +76,16 @@ namespace OnlyOrm
                 var result = new List<T>();
                 var type = typeof(T);
                 var properies = SqlCache<T>.AllProperties;
-                var reader = command.ExecuteReader();
-                while (reader.Read())
+                var adapter = new MySqlDataAdapter(command);
+                var dataSet = new DataSet();
+                var count = adapter.Fill(dataSet);
+
+                for (var i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                 {
                     T t = Activator.CreateInstance<T>();
                     foreach (var proerty in properies)
                     {
-                        var value = reader[proerty.GetMappingName()];
+                        var value = dataSet.Tables[0].Rows[i][proerty.GetMappingName()];
                         proerty.SetValue(t, value is DBNull ? null : value);
                     }
                     result.Add(t);
@@ -91,6 +95,13 @@ namespace OnlyOrm
             });
         }
 
+        /// <summary>
+        /// 批量获取某个字段
+        /// </summary>
+        public static IList<T> FindInList<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
+        {
+            return null;
+        }
 
         /// <summary>
         /// 插入实体，如果实体的主键是自动增长的，会被过滤掉
@@ -144,11 +155,6 @@ namespace OnlyOrm
                 var result = command.ExecuteNonQuery();
                 return result == 1;
             });
-        }
-
-        public static bool InList<T>() where T : OrmBaseModel
-        {
-            return true;
         }
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)

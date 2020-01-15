@@ -1,8 +1,8 @@
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/bin/Debug/netstandard2.0/OnlyOrm.deps.json
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/bin/Debug/netstandard2.0/OnlyOrm.dll
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/bin/Debug/netstandard2.0/OnlyOrm.pdb
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/obj/Debug/netstandard2.0/OnlyOrm.csprojAssemblyReference.cache
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/obj/Debug/netstandard2.0/OnlyOrm.AssemblyInfoInputs.cache
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/obj/Debug/netstandard2.0/OnlyOrm.AssemblyInfo.cs
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/obj/Debug/netstandard2.0/OnlyOrm.dll
-/media/zhangqi/文档/git_repository/only-orm/onlyorm/OnlyOrm/obj/Debug/netstandard2.0/OnlyOrm.pdb
+e:\学习\onlyorm\onlyorm\OnlyOrm\bin\Debug\netstandard2.0\OnlyOrm.deps.json
+e:\学习\onlyorm\onlyorm\OnlyOrm\bin\Debug\netstandard2.0\OnlyOrm.dll
+e:\学习\onlyorm\onlyorm\OnlyOrm\bin\Debug\netstandard2.0\OnlyOrm.pdb
+e:\学习\onlyorm\onlyorm\OnlyOrm\obj\Debug\netstandard2.0\OnlyOrm.AssemblyInfoInputs.cache
+e:\学习\onlyorm\onlyorm\OnlyOrm\obj\Debug\netstandard2.0\OnlyOrm.AssemblyInfo.cs
+e:\学习\onlyorm\onlyorm\OnlyOrm\obj\Debug\netstandard2.0\OnlyOrm.dll
+e:\学习\onlyorm\onlyorm\OnlyOrm\obj\Debug\netstandard2.0\OnlyOrm.pdb
+e:\学习\onlyorm\onlyorm\OnlyOrm\obj\Debug\netstandard2.0\OnlyOrm.csprojAssemblyReference.cache

@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 using OnlyOrm.Exceptions;
 using MySql.Data.MySqlClient;
 using System.Reflection;
+using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace OnlyOrm.Exetnds
 {
@@ -32,18 +34,18 @@ namespace OnlyOrm.Exetnds
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            if(node.Left.NodeType == ExpressionType.MemberAccess && node.Right.NodeType == ExpressionType.Constant)
+            if (node.Left.NodeType == ExpressionType.MemberAccess && node.Right.NodeType == ExpressionType.Constant)
             {
                 this.ProcessNode(node.NodeType, (ConstantExpression)node.Right, (MemberExpression)node.Left);
                 return node;
             }
-            if(node.Left.NodeType == ExpressionType.Constant && node.Right.NodeType == ExpressionType.MemberAccess)
+            if (node.Left.NodeType == ExpressionType.Constant && node.Right.NodeType == ExpressionType.MemberAccess)
             {
                 this.ProcessNode(node.NodeType, (ConstantExpression)node.Left, (MemberExpression)node.Right);
                 return node;
             }
             this.Visit(node.Left);
-            this._conditions.Push(GetSqlOperate(node.NodeType));
+            this._conditions.Push(MontageSqlHelper.GetSqlOperate(node.NodeType));
             this.Visit(node.Right);
 
             return node;
@@ -64,61 +66,44 @@ namespace OnlyOrm.Exetnds
             if (null == method)
                 throw new ArgumentNullException("method is null");
 
-            string paraValue = (method.Arguments[0] as ConstantExpression).Value.ToString();
             switch (method.Method.Name)
             {
                 case "StartWith":
-                    paraValue = $"{paraValue}%";
+                    ProcessMethodExpress(method, MontageSqlHelper.GetStartWithQueryParaValue);
                     break;
                 case "Contains":
-                    paraValue = $"%{paraValue}%";
+                    ProcessMethodExpress(method, MontageSqlHelper.GetContainsQueryConditon);
                     break;
                 case "EndWith":
-                    paraValue = $"%{paraValue}";
+                    ProcessMethodExpress(method, MontageSqlHelper.GetEndWithQueryConditon);
+                    break;
+                case "InList":
+                    ProcessMethodExpress(method, MontageSqlHelper.ProcessInListMethod);
                     break;
                 default:
                     throw new MethodNotSupportException(method.Method.Name);
             }
-            var memberNode = method.Object as MemberExpression;
-            this._conditions.Push(string.Format("({0} LIKE ?{0})", memberNode.Member.GetMappingName()));
-            this._parameters.Add(new MySqlParameter($"?{memberNode.Member.GetMappingName()}", paraValue));
+
             return method;
+        }
+
+        private void ProcessMethodExpress(MethodCallExpression method, SqlProcessDelegate GetQueryParaValue)
+        {
+            var memberNode = method.Object as MemberExpression;
+            var paraName = null == memberNode ? "" : memberNode.Member.GetMappingName();
+            string conditionStr = "";
+            var parameters = GetQueryParaValue.Invoke(paraName, method, out conditionStr);
+            this._conditions.Push(conditionStr);
+            this._parameters.AddRange(parameters);
         }
 
         private void ProcessNode(ExpressionType nodeType, ConstantExpression cNode, MemberExpression mNode)
         {
             var memberName = mNode.Member.GetMappingName();
-            this._conditions.Push($"{memberName} {GetSqlOperate(nodeType)} ?{memberName}");
+            this._conditions.Push($"{memberName} {MontageSqlHelper.GetSqlOperate(nodeType)} ?{memberName}");
 
             var value = cNode.Value.ToString();
             this._parameters.Add(new MySqlParameter($"?{memberName}", value));
-        }
-
-        private static string GetSqlOperate(ExpressionType type)
-        {
-            switch (type)
-            {
-                case ExpressionType.Equal:
-                    return " = ";
-                case ExpressionType.GreaterThan:
-                    return " > ";
-                case ExpressionType.GreaterThanOrEqual:
-                    return " >= ";
-                case ExpressionType.LessThan:
-                    return " < ";
-                case ExpressionType.LessThanOrEqual:
-                    return " <= ";
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                    return " AND ";
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                    return " OR ";
-                case (ExpressionType.Not):
-                    return " NOT ";
-                default:
-                    throw new OperateNotSupportException(type.ToString());
-            }
         }
     }
 }
