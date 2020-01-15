@@ -4329,11 +4329,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj",
+      "projectUniqueName": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj",
       "projectName": "OnlyOrm.Test",
-      "projectPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj",
+      "projectPath": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\OnlyOrm.Test.csproj",
       "packagesPath": "C:\\Users\\zhangqi\\.nuget\\packages\\",
-      "outputPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\obj\\",
+      "outputPath": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm.Test\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -4350,8 +4350,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {
-              "projectPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj"
+            "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {
+              "projectPath": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj"
             }
           }
         }

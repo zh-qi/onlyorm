@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using MySql.Data.MySqlClient;
 using OnlyOrm.Exetnds;
+using OnlyOrm.Pool;
 using System.Reflection;
 using OnlyOrm.Cache;
 using System.Collections.Generic;
@@ -96,14 +97,6 @@ namespace OnlyOrm
         }
 
         /// <summary>
-        /// 批量获取某个字段
-        /// </summary>
-        public static IList<T> FindInList<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
-        {
-            return null;
-        }
-
-        /// <summary>
         /// 插入实体，如果实体的主键是自动增长的，会被过滤掉
         /// </summary>
         public static bool Insert<T>(T t) where T : OrmBaseModel
@@ -159,6 +152,7 @@ namespace OnlyOrm
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)
         {
+            var connection = ConnectionPool.GetConnection();
             using (MySqlConnection conn = new MySqlConnection(_connctStr))
             {
                 MySqlCommand command = new MySqlCommand(sqlStr, conn);

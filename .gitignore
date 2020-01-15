@@ -4,3 +4,10 @@
 *.dll
 *.cache
 *.cache
+*.ts-template
+*.cs-template
+*.js
+*.vb-template
+*.json
+*.json
+*.json
