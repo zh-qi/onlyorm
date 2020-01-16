@@ -24,8 +24,8 @@ namespace OnlyOrm.Test
                 // Console.WriteLine(user.Count);
             }
             {
-                // var update = Orm.UpdateWhere<SuperUser>(u => u.NickName += "12",
-                //                                         u => u.NickName.Contains("zhang"));
+                var update = Orm.UpdateWhere<SuperUser>(u => u.NickName.ConCat("222", u.Email),
+                                                        u => u.Id == 1);
             }
             {
                 // 插入一个User实例，如果Id是主键，会被过滤掉
@@ -40,7 +40,7 @@ namespace OnlyOrm.Test
                 // Orm.Insert<SuperUser>(user1);
             }
             {
-                // 更新主键是3dUser
+                // 更新主键是3的User
                 // var user1 = new SuperUser
                 // {
                 //     Id = 3,

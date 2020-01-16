@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using MySql.Data.MySqlClient;
@@ -80,6 +81,16 @@ namespace OnlyOrm.Exetnds
             return result.ToArray();
         }
 
+        internal static MySqlParameter[] ProcessConcatMethod(string paraName, MethodCallExpression method, out string conditionStr)
+        {
+            var arg0 = method.Arguments[0] as MemberExpression;
+            var mappingName = arg0.Member.GetMappingName();
+            conditionStr = $"{mappingName} =  Concat (";
+            var result = GetConCatConditon(method.Arguments, mappingName, ref conditionStr);
+            conditionStr += ")";
+            return result;
+        }
+
         internal static string GetSqlOperate(ExpressionType type)
         {
             switch (type)
@@ -105,6 +116,38 @@ namespace OnlyOrm.Exetnds
                 default:
                     throw new OperateNotSupportException(type.ToString());
             }
+        }
+
+        private static MySqlParameter[] GetConCatConditon(ReadOnlyCollection<Expression> expressions, string mappingName, ref string conditionStr)
+        {
+            var result = new List<MySqlParameter>();
+            for (var i = 0; i < expressions.Count; i++)
+            {
+                switch (expressions[i].NodeType)
+                {
+                    case ExpressionType.MemberAccess:
+                        conditionStr += (expressions[i] as MemberExpression).Member.GetMappingName();
+                        break;
+                    case ExpressionType.Constant:
+                        var value = (expressions[i] as ConstantExpression).Value;
+                        result.Add(new MySqlParameter($"?{mappingName + i}", value));
+                        conditionStr += $"?{mappingName + i}";
+                        break;
+                    case ExpressionType.NewArrayInit:
+                        var ex = (expressions[i] as NewArrayExpression).Expressions;
+                        result.AddRange(GetConCatConditon(ex, mappingName, ref conditionStr));
+                        break;
+                    default:
+                        break;
+                }
+
+                if (i != expressions.Count - 1)
+                {
+                    conditionStr += ",";
+                }
+            }
+
+            return result.ToArray();
         }
     }
 }

@@ -21,5 +21,13 @@ namespace OnlyOrm.Exetnds
             }
             return false;
         }
+
+        /// <summary>
+        /// 属性拓展方法
+        /// </summary>
+        public static string ConCat<T>(this T t, params String[] values) where T : IComparable
+        {
+            return string.Concat(values);
+        }
     }
 }

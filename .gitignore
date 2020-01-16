@@ -8,6 +8,7 @@
 *.cs-template
 *.js
 *.vb-template
-*.json
-*.json
-*.json
+onlyorm/OnlyOrm.Test/obj/OnlyOrm.Test.csproj.nuget.dgspec.json
+onlyorm/.vscode/solution-explorer/template-list.json
+onlyorm/OnlyOrm.Test/obj/OnlyOrm.Test.csproj.nuget.dgspec.json
+onlyorm/OnlyOrm.Test/obj/project.assets.json

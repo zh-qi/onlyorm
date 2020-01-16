@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using OnlyOrm.Exetnds;
 
@@ -55,7 +56,7 @@ namespace OnlyOrm.Cache
 
         internal static string GetUpdateWhereSql(string tableName)
         {
-            var sqlStr = $"UPDATE {tableName} ";
+            var sqlStr = $"UPDATE {tableName} SET ";
             return sqlStr;
         }
     }

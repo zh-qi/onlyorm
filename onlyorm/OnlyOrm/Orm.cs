@@ -135,12 +135,23 @@ namespace OnlyOrm
         public static bool UpdateWhere<T>(Expression<Action<T>> action, Expression<Func<T, bool>> conditions) where T : OrmBaseModel
         {
             SqlVisitor visitor = new SqlVisitor();
+            visitor.Visit(action);
+            var setStr = visitor.GetSql();
+            var setPrarmes = visitor.GetParameters();
+
             visitor.Visit(conditions);
-            var sqlStr = SqlCache<T>.GetSql(SqlType.UpdateWhere) + visitor.GetSql();
-            var parameters = visitor.GetParameters();
-            return ExceteSql<bool>(sqlStr, parameters, command =>
+            var whereStr = visitor.GetSql();
+            var wherePrarmes = visitor.GetParameters();
+
+            var sqlStr = SqlCache<T>.GetSql(SqlType.UpdateWhere) + setStr + " WHERE " + whereStr;
+            var allParames = new List<MySqlParameter>();
+            allParames.AddRange(setPrarmes);
+            allParames.AddRange(wherePrarmes);
+
+            return ExceteSql<bool>(sqlStr, allParames.ToArray(), command =>
             {
-                return true;
+                var result = command.ExecuteNonQuery();
+                return result >= 1;
             });
         }
 
@@ -183,7 +194,6 @@ namespace OnlyOrm
 
         private static T ExceteSql<T>(string sqlStr, MySqlParameter[] parameters, Func<MySqlCommand, T> callback)
         {
-            var connection = ConnectionPool.GetConnection();
             using (MySqlConnection conn = new MySqlConnection(_connctStr))
             {
                 MySqlCommand command = new MySqlCommand(sqlStr, conn);

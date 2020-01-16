@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {}
+    "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {}
   },
   "projects": {
-    "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {
+    "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj",
+        "projectUniqueName": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj",
         "projectName": "OnlyOrm",
-        "projectPath": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj",
+        "projectPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\OnlyOrm.csproj",
         "packagesPath": "C:\\Users\\zhangqi\\.nuget\\packages\\",
-        "outputPath": "e:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\obj\\",
+        "outputPath": "E:\\学习\\onlyorm\\onlyorm\\OnlyOrm\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

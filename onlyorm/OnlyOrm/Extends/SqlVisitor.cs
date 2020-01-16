@@ -33,7 +33,9 @@ namespace OnlyOrm.Exetnds
         /// </summary>
         public MySqlParameter[] GetParameters()
         {
-            return _parameters.ToArray();
+            var result = _parameters.ToArray();
+            _parameters.Clear();
+            return result;
         }
 
         /// <summary>
@@ -68,6 +70,17 @@ namespace OnlyOrm.Exetnds
             return node;
         }
 
+        protected override Expression VisitLambda<T>(Expression<T> node)
+        {
+            if (null != node.Body)
+            {
+                this.Visit(node.Body);
+                return node.Body;
+            }
+
+            return node;
+        }
+
         protected override Expression VisitConstant(ConstantExpression node)
         {
             return node;
@@ -78,19 +91,22 @@ namespace OnlyOrm.Exetnds
             if (null == method)
                 throw new ArgumentNullException("method is null");
 
-            switch (method.Method.Name)
+            switch (method.Method.Name.ToLower())
             {
-                case "StartWith":
+                case "startwith":
                     ProcessMethodExpress(method, MontageSqlHelper.GetStartWithQueryParaValue);
                     break;
-                case "Contains":
+                case "contains":
                     ProcessMethodExpress(method, MontageSqlHelper.GetContainsQueryConditon);
                     break;
-                case "EndWith":
+                case "endwith":
                     ProcessMethodExpress(method, MontageSqlHelper.GetEndWithQueryConditon);
                     break;
-                case "InList":
+                case "inlist":
                     ProcessMethodExpress(method, MontageSqlHelper.ProcessInListMethod);
+                    break;
+                case "concat":
+                    ProcessMethodExpress(method, MontageSqlHelper.ProcessConcatMethod);
                     break;
                 default:
                     throw new MethodNotSupportException(method.Method.Name);
