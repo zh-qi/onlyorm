@@ -46,5 +46,17 @@ namespace OnlyOrm.Cache
             var sqlStr = $"DELETE FROM {tableName} Where {primaryKeyProp.GetMappingName()}=?{primaryKeyProp.GetMappingName()}";
             return sqlStr;
         }
+
+        internal static string GetDeleateWhereSql(string tableName)
+        {
+            var sqlStr = $"DELETE FROM {tableName} Where ";
+            return sqlStr;
+        }
+
+        internal static string GetUpdateWhereSql(string tableName)
+        {
+            var sqlStr = $"UPDATE {tableName} ";
+            return sqlStr;
+        }
     }
 }

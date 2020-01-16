@@ -132,6 +132,18 @@ namespace OnlyOrm
             });
         }
 
+        public static bool UpdateWhere<T>(Expression<Action<T>> action, Expression<Func<T, bool>> conditions) where T : OrmBaseModel
+        {
+            SqlVisitor visitor = new SqlVisitor();
+            visitor.Visit(conditions);
+            var sqlStr = SqlCache<T>.GetSql(SqlType.UpdateWhere) + visitor.GetSql();
+            var parameters = visitor.GetParameters();
+            return ExceteSql<bool>(sqlStr, parameters, command =>
+            {
+                return true;
+            });
+        }
+
         /// <summary>
         /// 按主键值进行删除
         /// </summary>
@@ -147,6 +159,25 @@ namespace OnlyOrm
             {
                 var result = command.ExecuteNonQuery();
                 return result == 1;
+            });
+        }
+
+        /// <summary>
+        /// 根据表达式目录树，批量的删除
+        /// </summary>
+        public static bool DeleateWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
+        {
+            if (null == conditions)
+                return false;
+
+            SqlVisitor visitor = new SqlVisitor();
+            visitor.Visit(conditions);
+            var sqlStr = SqlCache<T>.GetSql(SqlType.DeleateWhere) + visitor.GetSql();
+            var parameters = visitor.GetParameters();
+            return ExceteSql<bool>(sqlStr, parameters, command =>
+            {
+                var result = command.ExecuteNonQuery();
+                return result >= 1;
             });
         }
 

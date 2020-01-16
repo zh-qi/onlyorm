@@ -24,22 +24,8 @@ namespace OnlyOrm.Test
                 // Console.WriteLine(user.Count);
             }
             {
-
-                var ids = new List<int>()
-                {
-                    1,2,3,4,5
-                };
-                var user = Orm.FindWhere<SuperUser>(u => u.Id.InList<int>(ids));
-
-                Thread t = new Thread(Pool_Test);
-
-                Thread t1 = new Thread(Pool_Test);
-                Thread t2 = new Thread(Pool_Test);
-                Thread t3 = new Thread(Pool_Test);
-                t2.Start();
-                t1.Start();
-                t.Start();
-                t3.Start();
+                // var update = Orm.UpdateWhere<SuperUser>(u => u.NickName += "12",
+                //                                         u => u.NickName.Contains("zhang"));
             }
             {
                 // 插入一个User实例，如果Id是主键，会被过滤掉

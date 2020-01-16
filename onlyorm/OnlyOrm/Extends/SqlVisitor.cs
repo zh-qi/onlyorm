@@ -9,12 +9,18 @@ using System.Collections.ObjectModel;
 
 namespace OnlyOrm.Exetnds
 {
+    /// <summary>
+    /// 将表达式目录树解析为对应的SQL
+    /// </summary>
     internal class SqlVisitor : ExpressionVisitor
     {
         private Stack<string> _conditions = new Stack<string>();
 
         private List<MySqlParameter> _parameters = new List<MySqlParameter>();
 
+        /// <summary>
+        /// 获取拼接后的SQL
+        /// </summary>
         public string GetSql()
         {
             string sql = string.Join(" ", _conditions);
@@ -22,11 +28,17 @@ namespace OnlyOrm.Exetnds
             return sql;
         }
 
+        /// <summary>
+        /// 获取拼接后的参数化参数
+        /// </summary>
         public MySqlParameter[] GetParameters()
         {
             return _parameters.ToArray();
         }
 
+        /// <summary>
+        /// 设置要翻译的表达式目录树
+        /// </summary>
         public override Expression Visit(Expression node)
         {
             return base.Visit(node);

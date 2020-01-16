@@ -13,6 +13,9 @@ namespace OnlyOrm.Exetnds
     /// </summary>
     internal static class MontageSqlHelper
     {
+        /// <summary>
+        /// 策略方法：获取StartWith方法的参数和拼接字符串
+        /// </summary>
         internal static MySqlParameter[] GetStartWithQueryParaValue(string paraName, MethodCallExpression method, out string conditionStr)
         {
             conditionStr = string.Format("({0} LIKE ?{0})", paraName);
@@ -22,6 +25,10 @@ namespace OnlyOrm.Exetnds
             };
             return result;
         }
+
+        /// <summary>
+        /// 策略方法：获取EndWith方法的参数和拼接字符串
+        /// </summary>
         internal static MySqlParameter[] GetEndWithQueryConditon(string paraName, MethodCallExpression method, out string conditionStr)
         {
             conditionStr = string.Format("({0} LIKE ?{0})", paraName);
@@ -31,6 +38,9 @@ namespace OnlyOrm.Exetnds
             };
             return result;
         }
+        /// <summary>
+        /// 策略方法：获取Contains方法的参数和拼接字符串
+        /// </summary>
         internal static MySqlParameter[] GetContainsQueryConditon(string paraName, MethodCallExpression method, out string conditionStr)
         {
             conditionStr = string.Format("({0} LIKE ?{0})", paraName);
@@ -41,6 +51,9 @@ namespace OnlyOrm.Exetnds
             return result;
         }
 
+        /// <summary>
+        /// 策略方法：获取InList方法的参数和拼接字符串
+        /// </summary>
         internal static MySqlParameter[] ProcessInListMethod(string paraName, MethodCallExpression method, out string conditionStr)
         {
             var arg0 = method.Arguments[0] as MemberExpression;

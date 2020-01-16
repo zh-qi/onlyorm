@@ -47,6 +47,8 @@ namespace OnlyOrm.Cache
             _cache[SqlType.Deleate] = SqlStringHelper.GetDelSql(TableName, PrimaryKeyProp);
             _cache[SqlType.Update] = SqlStringHelper.GetUpdateSql(TableName, Properties);
             _cache[SqlType.FindWhere] = SqlStringHelper.GetFindWhereSql(TableName, AllProperties);
+            _cache[SqlType.DeleateWhere] = SqlStringHelper.GetDeleateWhereSql(TableName);
+            _cache[SqlType.UpdateWhere] = SqlStringHelper.GetUpdateWhereSql(TableName);
         }
 
         /// <summary>
