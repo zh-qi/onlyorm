@@ -30,6 +30,7 @@ namespace OnlyOrm
 
             _connctStr = config["OnlyOrm:ConnectString"];
             _sqlType = config["OnlyOrm:Type"];
+            MontageSqlHelper.SqlPrifix = MontageSqlHelper.GetSqlTypePrix(_sqlType);
         }
 
         ///<summary>
@@ -66,6 +67,7 @@ namespace OnlyOrm
         /// <summary>
         /// 批量获取符合条件的数据
         /// </summary>
+        /// <param name="conditions">查找的条件</param>
         public static IList<T> FindWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
         {
             SqlVisitor visitor = new SqlVisitor();
@@ -132,6 +134,11 @@ namespace OnlyOrm
             });
         }
 
+        /// <summary>
+        /// 根据实例主键进行更新
+        /// </summary>
+        /// <param name="action">更新动作</param>
+        /// <param name="conditions">更新的条件</param>
         public static bool UpdateWhere<T>(Expression<Action<T>> action, Expression<Func<T, bool>> conditions) where T : OrmBaseModel
         {
             SqlVisitor visitor = new SqlVisitor();
@@ -176,6 +183,7 @@ namespace OnlyOrm
         /// <summary>
         /// 根据表达式目录树，批量的删除
         /// </summary>
+        /// <param name="conditions">删除的条件</param>
         public static bool DeleateWhere<T>(Expression<Func<T, bool>> conditions) where T : OrmBaseModel
         {
             if (null == conditions)

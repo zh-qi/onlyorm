@@ -86,6 +86,11 @@ static void Main(string[] args)
          var user = Orm.FindWhere<SuperUser>(u => u.Id.InList<int>(ids));
     }
     {
+        // 按照表达式目录树的方式进行查询，更新，删除，
+        var update = Orm.UpdateWhere<SuperUser>(u => u.NickName.ConCat("222", u.Email),
+                                                u => u.Id == 1);
+    }
+    {
         // 插入一个User实例，如果Id是主键，会被过滤掉
         var user1 = new SuperUser
         {

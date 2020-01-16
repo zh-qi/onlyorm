@@ -128,10 +128,10 @@ namespace OnlyOrm.Exetnds
         private void ProcessNode(ExpressionType nodeType, ConstantExpression cNode, MemberExpression mNode)
         {
             var memberName = mNode.Member.GetMappingName();
-            this._conditions.Push($"{memberName} {MontageSqlHelper.GetSqlOperate(nodeType)} ?{memberName}");
+            this._conditions.Push($"{memberName} {MontageSqlHelper.GetSqlOperate(nodeType)} {MontageSqlHelper.SqlPrifix}{memberName}");
 
             var value = cNode.Value.ToString();
-            this._parameters.Add(new MySqlParameter($"?{memberName}", value));
+            this._parameters.Add(new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{memberName}", value));
         }
     }
 }

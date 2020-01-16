@@ -24,6 +24,7 @@ namespace OnlyOrm.Test
                 // Console.WriteLine(user.Count);
             }
             {
+                // 按照表达式目录树的方式进行查询，更新，删除，
                 var update = Orm.UpdateWhere<SuperUser>(u => u.NickName.ConCat("222", u.Email),
                                                         u => u.Id == 1);
             }

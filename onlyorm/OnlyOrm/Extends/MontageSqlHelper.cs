@@ -14,12 +14,15 @@ namespace OnlyOrm.Exetnds
     /// </summary>
     internal static class MontageSqlHelper
     {
+
+        internal static string SqlPrifix { get; set; }
+
         /// <summary>
         /// 策略方法：获取StartWith方法的参数和拼接字符串
         /// </summary>
         internal static MySqlParameter[] GetStartWithQueryParaValue(string paraName, MethodCallExpression method, out string conditionStr)
         {
-            conditionStr = string.Format("({0} LIKE ?{0})", paraName);
+            conditionStr = $"({paraName} LIKE {SqlPrifix}{paraName})";
             var result = new MySqlParameter[]
             {
                 new MySqlParameter(paraName, $"{(method.Arguments[0] as ConstantExpression).Value.ToString()}%")
@@ -32,7 +35,7 @@ namespace OnlyOrm.Exetnds
         /// </summary>
         internal static MySqlParameter[] GetEndWithQueryConditon(string paraName, MethodCallExpression method, out string conditionStr)
         {
-            conditionStr = string.Format("({0} LIKE ?{0})", paraName);
+            conditionStr = $"({paraName} LIKE {SqlPrifix}{paraName})";
             var result = new MySqlParameter[]
             {
                 new MySqlParameter(paraName,$"%{(method.Arguments[0] as ConstantExpression).Value.ToString()}")
@@ -44,7 +47,7 @@ namespace OnlyOrm.Exetnds
         /// </summary>
         internal static MySqlParameter[] GetContainsQueryConditon(string paraName, MethodCallExpression method, out string conditionStr)
         {
-            conditionStr = string.Format("({0} LIKE ?{0})", paraName);
+            conditionStr = $"({paraName} LIKE {SqlPrifix}{paraName})";
             var result = new MySqlParameter[]
             {
                 new MySqlParameter(paraName,$"%{(method.Arguments[0] as ConstantExpression).Value.ToString()}%")
@@ -69,8 +72,8 @@ namespace OnlyOrm.Exetnds
             var inStr = "";
             for (var i = 0; i < valueList.Count; i++)
             {
-                inStr += "?" + mappingName + i;
-                result.Add(new MySqlParameter($"?{mappingName + i}", valueList[i].ToString()));
+                inStr += SqlPrifix + mappingName + i;
+                result.Add(new MySqlParameter($"{SqlPrifix}{mappingName + i}", valueList[i].ToString()));
                 if (i != valueList.Count - 1)
                 {
                     inStr += ",";
@@ -81,6 +84,9 @@ namespace OnlyOrm.Exetnds
             return result.ToArray();
         }
 
+        /// <summary>
+        /// 策略方法：获取ConCat方法的参数和拼接字符串
+        /// </summary>
         internal static MySqlParameter[] ProcessConcatMethod(string paraName, MethodCallExpression method, out string conditionStr)
         {
             var arg0 = method.Arguments[0] as MemberExpression;
@@ -89,6 +95,21 @@ namespace OnlyOrm.Exetnds
             var result = GetConCatConditon(method.Arguments, mappingName, ref conditionStr);
             conditionStr += ")";
             return result;
+        }
+
+        internal static string GetSqlTypePrix(string sqlType)
+        {
+            switch (sqlType)
+            {
+                case "mysql":
+                    return "?";
+                case "sqlserver":
+                    return "@";
+                case "oracle":
+                    return ":";
+                default:
+                    return "?";
+            }
         }
 
         internal static string GetSqlOperate(ExpressionType type)
@@ -117,7 +138,6 @@ namespace OnlyOrm.Exetnds
                     throw new OperateNotSupportException(type.ToString());
             }
         }
-
         private static MySqlParameter[] GetConCatConditon(ReadOnlyCollection<Expression> expressions, string mappingName, ref string conditionStr)
         {
             var result = new List<MySqlParameter>();
@@ -130,8 +150,8 @@ namespace OnlyOrm.Exetnds
                         break;
                     case ExpressionType.Constant:
                         var value = (expressions[i] as ConstantExpression).Value;
-                        result.Add(new MySqlParameter($"?{mappingName + i}", value));
-                        conditionStr += $"?{mappingName + i}";
+                        result.Add(new MySqlParameter($"{SqlPrifix}{mappingName + i}", value));
+                        conditionStr += $"{SqlPrifix}{mappingName + i}";
                         break;
                     case ExpressionType.NewArrayInit:
                         var ex = (expressions[i] as NewArrayExpression).Expressions;

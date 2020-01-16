@@ -14,7 +14,7 @@ namespace OnlyOrm.Cache
         internal static string GetFindSql(string tableName, PropertyInfo primaryKeyProp, PropertyInfo[] properties)
         {
             var columnString = string.Join(",", properties.Select(p => p.GetMappingName()));
-            var sqlStr = $"SELECT {columnString} from {tableName} where {primaryKeyProp.GetMappingName()}=?{primaryKeyProp.GetMappingName()}";
+            var sqlStr = $"SELECT {columnString} from {tableName} where {primaryKeyProp.GetMappingName()}={MontageSqlHelper.SqlPrifix}{primaryKeyProp.GetMappingName()}";
             return sqlStr;
         }
 
@@ -28,7 +28,7 @@ namespace OnlyOrm.Cache
         internal static string GetInsertSql(string tableName, PropertyInfo[] properties)
         {
             var values = string.Join(",", properties.Select(p => p.GetMappingName()));
-            var parameterStr = string.Join(",", properties.Select(p => "?" + p.GetMappingName()));
+            var parameterStr = string.Join(",", properties.Select(p => MontageSqlHelper.SqlPrifix + p.GetMappingName()));
             var sqlStr = $"INSERT INTO {tableName} ({values}) values ({parameterStr})";
 
             return sqlStr;
@@ -36,15 +36,15 @@ namespace OnlyOrm.Cache
 
         internal static string GetUpdateSql(string tableName, PropertyInfo[] properties)
         {
-            var updateStr = String.Join(",", properties.Select(p => $"{p.GetMappingName()}=?{p.GetMappingName()}"));
-            var sqlStr = $"UPDATE {tableName} set {updateStr} Where Id = ?Id";
+            var updateStr = String.Join(",", properties.Select(p => $"{p.GetMappingName()}={MontageSqlHelper.SqlPrifix}{p.GetMappingName()}"));
+            var sqlStr = $"UPDATE {tableName} set {updateStr} Where Id = {MontageSqlHelper.SqlPrifix}Id";
 
             return sqlStr;
         }
 
         internal static string GetDelSql(string tableName, PropertyInfo primaryKeyProp)
         {
-            var sqlStr = $"DELETE FROM {tableName} Where {primaryKeyProp.GetMappingName()}=?{primaryKeyProp.GetMappingName()}";
+            var sqlStr = $"DELETE FROM {tableName} Where {primaryKeyProp.GetMappingName()}={MontageSqlHelper.SqlPrifix}{primaryKeyProp.GetMappingName()}";
             return sqlStr;
         }
 

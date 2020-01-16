@@ -69,7 +69,7 @@ namespace OnlyOrm.Cache
         {
             MySqlParameter[] parameters = new[]
             {
-                new MySqlParameter($"?{PrimaryKeyProp.GetMappingName()}", primaryValue),
+                new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{PrimaryKeyProp.GetMappingName()}", primaryValue),
             };
 
             return parameters;
@@ -83,11 +83,11 @@ namespace OnlyOrm.Cache
         internal static MySqlParameter[] GetInsertMySqlParameters(T t)
         {
             var parameters = Properties.Select(
-                    p => new MySqlParameter($"?{p.GetMappingName()}", p.GetValue(t) ?? DBNull.Value)
+                    p => new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{p.GetMappingName()}", p.GetValue(t) ?? DBNull.Value)
                 ).ToList();
             if (null == PrimaryKeyProp)
             {
-                parameters.Add(new MySqlParameter($"?{PrimaryKeyProp.GetMappingName()}", PrimaryKeyProp.GetValue(t)));
+                parameters.Add(new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{PrimaryKeyProp.GetMappingName()}", PrimaryKeyProp.GetValue(t)));
             }
 
             return parameters.ToArray();
@@ -101,10 +101,10 @@ namespace OnlyOrm.Cache
         internal static MySqlParameter[] GetUpdateMySqlParameters(T t)
         {
             var parameters = Properties.Select(
-                    p => new MySqlParameter($"?{p.GetMappingName()}", p.GetValue(t) ?? DBNull.Value)
+                    p => new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{p.GetMappingName()}", p.GetValue(t) ?? DBNull.Value)
                 ).ToList();
 
-            parameters.Add(new MySqlParameter($"?{PrimaryKeyProp.GetMappingName()}", PrimaryKeyProp.GetValue(t)));
+            parameters.Add(new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{PrimaryKeyProp.GetMappingName()}", PrimaryKeyProp.GetValue(t)));
             return parameters.ToArray();
         }
 
@@ -117,7 +117,7 @@ namespace OnlyOrm.Cache
         {
             MySqlParameter[] parameters = new[]
             {
-                new MySqlParameter($"?{PrimaryKeyProp.GetMappingName()}", primaryValue),
+                new MySqlParameter($"{MontageSqlHelper.SqlPrifix}{PrimaryKeyProp.GetMappingName()}", primaryValue),
             };
 
             return parameters;
